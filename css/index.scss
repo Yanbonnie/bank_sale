@@ -37,62 +37,38 @@ img{
     .page1{
         width: 100%;
         height:100%;
-        background: url($URL+'index_bg.jpg') no-repeat #ffd162 ;
-        @include prefixer(background-size,100% 100%);
+        // background: url($URL+'index_bg.jpg') no-repeat #ffd162 ;
+        // @include prefixer(background-size,100% 100%);
+        background:rgba(0,0,0,0.8);
         position: absolute;
         left: 0;
         top: 0;
         // min-height: 43rem;
-        height: 100%;        
-        .close{
-            font-size: REM(50);
-            color: $WHITE;
-            position: absolute;
-            right: REM(30);
-            top: REM(10);
-        }
+        height: 100%;   
         .pageBox{
-            width: 80%;
-            margin: REM(120) auto 0;
-            background: $WHITE;
-            padding: 5%;
-            border-radius: REM(20);
+            width: REM(602);
+            position:absolute;
+            left:50%;
+            top:50%;
+            margin-left:REMTWO(602);
+            margin-top:REMTWO(561);
             .title{
-                margin-top: REM(-100);
+                // margin-top: REM(-100);
+                width:REM(270);
+                position:absolute;
+                top:-5rem;
+                left:50%;
+                margin-left:REMTWO(270);
             }
-            P{
-                font-size: REM(28);
-                color: $BLACK;
-                &.tip{
-                    text-align: center;
-                    font-size: REM(24);
-                    color: #f97819;
-                    padding: REM(20) 0 0;
-                    position: relative;
-                    &::before{
-                        position: absolute;
-                        width: 6px;
-                        height: 6px;
-                        content: '.';
-                        font-size: 0;
-                        background: #f97819;
-                        left: 0;
-                        top: REM(30);
-                        @include prefixer(border-radius,REM(50));
-                    }
-                }
+            .add,.back{
+                position:absolute;
+                bottom:-4rem;
+                width:REM(200);
+                left:50%;
+                margin-left:REMTWO(200);
             }
-            a{
-                display: block;
-                text-align: center;
-                line-height: REM(60);
-                margin: REM(40) auto;
-                background: #f97919;
-                width: REM(250);
-                font-size: REM(30);
-                color: $WHITE;
-                @include prefixer(border-radius,REM(50))
-
+            .back{
+                bottom:-8rem;
             }
         }
     }
@@ -150,18 +126,38 @@ img{
     .page3{
         width: 100%;
         height:100%;
-        background: url($URL+'index_bg2.jpg') no-repeat center top #f8871b;
+        background: url($URL+'bg.jpg') no-repeat center top #f8871b;
         @include prefixer(background-size,100% auto);
         position: absolute;
         left: 0;
         top: 0;
         height: 100%;
         .chai{
-            width: 100%;
+            width: REM(500);
             position: absolute;
-            top:REM(320);
-            left: 0;
-            // @include prefixer(transform,translateY(-60%));
+            top:REM(290);
+            left: 50%;
+            margin-left:REMTWO(480);
+        }
+        .yao_num{
+            width:100%;
+            position:absolute;
+            left:0;
+            text-align:center;
+            top:REM(850);
+            font-size:REM(40);
+            font-weight:bold;
+            color:#ffffff;
+            span{
+                color:#ffc700;
+            }
+        }
+        .yao_txt{
+            width:REM(344);
+            position:absolute;
+            top:REM(980);
+            left:50%;
+            margin-left:REMTWO(344);
         }
     }
 }

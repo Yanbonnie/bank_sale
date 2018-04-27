@@ -21,22 +21,20 @@
         </div>
 
         <!-- 活动规则 -->
-        <div class="page1" v-show="pageStatus.two"><!---->
-            <span class="close" @click="pageStatus.two = false">x</span>
+        <div class="page1" v-show="pageStatus.two">
             <div class="pageBox">
                 <img class="title" src="images/rule_title.png" alt="">
-                <!-- <p>即日起-2018年02月28日活动期间，签约我行电银渠道，同时激活存款账户，即可在微信端上随机领取京东电子卡、CBA明星签名篮球、现金红包等丰厚奖品</p>
-                <div><a href="javascript:;">活动奖项</a></div> -->
-                <div><img src="images/gift.png" alt=""></div>
-                <!-- <div><a href="javascript:;">抽奖结果</a></div>
-                <p>电子券奖品以短信形式发送至客户中奖手机；实物奖品待活动结束后统一寄送,数量有限，先到先得!</p> -->
-                <p class="tip">活动最终解释权在法律允许的范围内归稠州银行所有</p>
+                <div><img src="images/gift.jpg" alt=""></div>
+                <img src="images/add.png" class="add">
+                <img src="images/back_btn.png" class="back" @click="pageStatus.two = false">
             </div>
         </div>
 
-        <!-- 开奖页 -->
+        <!-- 摇一摇 -->
         <div class="page3" v-show="pageStatus.three">
             <img src="images/chai.png"  class="chai" :class="[lotteryState ? 'shake':'']" alt="" @click="lotteryHandle">
+            <p class="yao_num">摇奖（<span>1</span>）次</p>
+            <img src="images/yao_tx.png" class="yao_txt">
         </div>
 
         <!-- 京东电子卡和篮球奖品弹框 -->

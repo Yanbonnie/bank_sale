@@ -50,7 +50,7 @@
                     <img src="images/line.png" class="line" alt="">
                     <p class="txt">恭喜您</p>
                     <p>{{gift.txt}}</p> <!--获得京东电子券-->
-                    <p v-show="gift.num != 3"><input type="text" name="" id="" v-model="gift.phone"></p>
+                    <p v-show="gift.num != 3"><input type="text" name="" id="" v-model="gift.phone" placeholder="请输入您的手机号码"></p>
                 </div>
                 <div class="modelFooter">
                     <span class="submit" v-show="gift.num != 3" @click="submitSure">
@@ -86,8 +86,7 @@
                 <div class="modelBody" v-if="gift.num != 3">
                     <img :src="gift.resultSrc[gift.num]" class="giftImg" alt=""> <!--images/gift2.png-->
                     <p class="txt" v-html="gift.resultTxt[gift.num]"></p>
-                    <p v-if="gift.num == 1">将发送至该{{gift.phone}}号码</p>
-                    <p v-if="gift.num == 2">我们会与该{{gift.phone}}联系，<br/>请保持手机通畅</p>
+                    <p v-if="gift.num == 1 || gift.num == 2">将发送至该{{gift.phone}}号码</p>
                 </div>
                 <div class="modelMoney" v-else>
                     <img :src="gift.resultSrc[gift.num]" alt=""> <!--images/gift2.png-->
@@ -104,44 +103,21 @@
                 <!-- <i class="close"><img src="images/close.png" alt=""></i> -->
                 <div class="modelHeader"></div>
                 <div class="modelBody">
-                    <img class="img1" v-if="!sorry.num" src="images/sorry_1.png" alt="">
-                    <img class="img1" v-if="sorry.num" src="images/sorry_2.png" alt="">
+                    <img class="img1" v-if="sorry.num == 1 || sorry.num == 2" src="images/sorry_1.png" alt="">
+                    <img class="img1" v-else src="images/sorry_2.png" alt="">
                     <div>
                         <p v-html="sorry.txt[sorry.num]"></p>
                     </div>
                 </div>
                 <div class="modelFooter clf">
-                    <div v-if="sorry.num != 1 && sorry.num != 4 && sorry.num != 2">
-                        <a href="javascript:;" class="submit" @click="model.sorry = false"><img src="images/sure_close.png" alt=""></a>
-                    </div>
-                    <div v-if="sorry.num == 2">
-                        <a href="javascript:;" class="submit"><img src="images/go_sign.png" alt=""></a>
-                    </div>    
-                    <div v-if="sorry.num == 4">
-                            <span class="back" @click="model.sorry = false;">
-                                <img src="images/refuse.png"  alt="">
-                            </span>
-                            <span class="sure">
-                                <img src="images/jihuo.png"  alt="">
-                            </span> 
-                    </div>           
+                    <div>
+                        <a v-if="sorry.num == 1" href="javascript:;" class="submit"><img src="images/again.png" alt=""></a>
+                        <a v-if="sorry.num == 2" href="javascript:;" class="submit"><img src="images/go_sign.png" alt=""></a>
+                        <a v-if="sorry.num == 3" href="javascript:;" class="submit"><img src="images/look_rule.png" alt=""></a>
+                    </div>            
                 </div>
             </div>
         </div>
-
-        <!-- 红包中间红包 -->
-        <!-- <div class="model redPackModel" v-show="model.redpack">
-            <div class="modelBox">
-                <div class="modelHeader"></div>
-                <div class="modelBody">
-                    <img src="images/result_gift.png" class="giftImg" alt=""> 
-                    <p>京东电子券<br>将发送至该手机号码</p>
-                </div>
-                <div class="modelFooter">
-                    <p>注意信息查收，如有疑问<br>请拨打客服电话：0571-96527</p>                    
-                </div>
-            </div>
-        </div> -->
         <!-- 加载中 -->
         <div id="loadingToast" v-show="loading.status">
             <div class="weui-mask_transparent"></div>
@@ -169,7 +145,7 @@
         </div>
     </div>
     <script src="js/zepto.min.js"></script>
-    <script type="text/javascript">
+ <!--    <script type="text/javascript">
         var basep = "images/", //图片目录
             preLoadSource = [ //背景资源
             basep + "back.png",
@@ -206,7 +182,7 @@
             basep + "win_3.png",
             ];
     </script>
-    <script src="js/loading.js"></script>
+    <script src="js/loading.js"></script> -->
     <script src="js/vue.min.js"></script>
     <script>
         //加载资源数组必须在loading之前进行配置
@@ -230,29 +206,25 @@
                     open:false,      //是否在开红包
                     gift:{
                         imgSrc:['','images/gift1.png','images/gift2.png','images/gift3.png'],
-                        resultSrc:['','images/result_gift.png','images/gift2.png','images/win_3.png'],
-                        resultTxt:['','京东电子券','篮球已成功领取'],
+                        resultSrc:['','images/result_gift.png','images/result_gift2.png','images/win_3.png'],
+                        resultTxt:['','京东电子券','加油卡'],
                         // txt:['获得京东电子券','获得CBA明星签名篮球','获得现金红包'],
-                        txt:'',        //奖品名称
-                        num:null,      //中奖等级；当is_prize为1时，此参数有值 ，1为京东券，2为篮球，3为微信红包
+                        txt:'',      //奖品名称
+                        num:null,      //中奖等级；当is_prize为1时，此参数有值 ，1为京东券，2为加油卡，3为微信红包
                         phone:'',
-                        money:null,     //当prize_level为3时，此参数有值，为红包⾦额
+                        money:null,     //当prize_level为3时，此参数有值，为红包金额
                     },
                     is_sign:null,           //⽤户是否签约;1为已签约，0为未签约
                     is_activation:null,     //⽤户是否激活；1为已激活，0为未激活
                     is_prize:null,          //⽤户本周是否中过奖，1为已中奖，0为未中奖
                     is_draw:null,           //⽤户是否提交过资料，1为已提交过，0为未提交过
-                    is_week:0,    //0为本周没抽奖，1是本周已抽过奖
+                    is_week:0,              //0为本周没抽奖，1是本周已抽过奖
                     sorry:{
-                        txt:['','我行客服将尽快与您联系<br/>如有疑问，请拨打客服电话<br/><span>0571-96527</span>','您还未签约我行微信银行','本周您已领取过奖品,下周再来吧!','您还未达到账户激活标准哦','本周奖品已领完，期待下次吧。','很抱歉，您未中奖，下周再来吧。','您本周已抽奖，下周再来吧。'],
-                        num:null,       
-                        //1-我行客服将尽快与您联系如有疑问，请拨打客服电话 (确定) 
-                        //2-您还未签约我行微信银行 (去签约)
-                        //3-本周您已领取过奖品,下周再来吧! （确定）
-                        //4-您还未达到账户激活标准哦  （拒绝  激活）
-                        //5-本周奖品已领完，期待下次吧。 （确定）
-                        //6-未中奖
-                        //7-本周已抽过奖
+                        txt:['','  哎呀，这次没有中奖哦，<br/>试试下次吧','  您还未签约我行微信银行，<br />签约后即可领取礼品哦','摇奖次数已耗完，<br />想要更多机会详见摇奖规则'],
+                        num:1,       
+                        //1-哎呀，这次没有中奖哦，<br/>试试下次吧 (再试一次) 
+                        //2-您还未签约我行微信银行，<br />签约后即可领取礼品哦 (去签约)
+                        //3-摇奖次数已耗完，<br />想要更多机会详见摇奖规则（查看规则）
                     },
                      
                     loading:{        //加载中弹框

@@ -2,7 +2,7 @@
 @import "_loading_22.scss"; 
 $orange:#f49f4f;
 .wrap{
-    visibility: hidden;
+    // visibility: hidden;
 }
 html,body{
     width: 100%;
@@ -208,7 +208,7 @@ img{
             margin-left: REMTWO(69);
         }
         .modelHeader{
-            background: #fe9d1b;
+            background: #a77ffb;
             height: REM(80);
             @include prefixer(border-top-left-radius, REM(20));
             @include prefixer(border-top-right-radius, REM(20));
@@ -222,7 +222,8 @@ img{
         }
         .modelFooter{
             padding: REM(30) 0;
-            background: #f97919;
+            background-image:-webkit-linear-gradient(to bottom, #572fa7, #3b1a7f); 
+            background-image:linear-gradient(to bottom,#572fa7, #3b1a7f);
             @include prefixer(border-bottom-left-radius, REM(20));
             @include prefixer(border-bottom-right-radius, REM(20));
             .submit{
@@ -260,7 +261,7 @@ img{
 .giftModel{
     .modelBox{
         .modelHeader{
-            background: #fe9d1b;
+            // background: #fe9d1b;
             height: REM(80);
         }
         .modelBody{
@@ -306,7 +307,7 @@ img{
         }
         .modelFooter{
             padding: REM(30) 0;
-            background: #f97919;
+            // background: #f97919;
             .submit{
                 width: REM(250);
                 display: block;

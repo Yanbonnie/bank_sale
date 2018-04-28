@@ -14,9 +14,10 @@
         <div class="page2" v-show="pageStatus.one">
             <img src="images/logo.png" class="logo" alt="">
             <img src="images/title.png" class="title" alt="">
+            <img src="images/rule.png" @click="pageStatus.two = true" class="rule" alt="">
             <p>活动期间，体验我行直销银行完成注册、激活、理财等业务，即可在微信银行进行抽奖活动，有机会赢取京东消费卡、加油卡、现金红包等丰厚奖品。</p>
             <div class="btn-box">
-                <a href="javascript:;" @click="pageStatus.two = true"><img src="images/rule.png" alt=""></a>
+                <a href="javascript:;" @click="startHandle"><img src="images/start.png" alt=""></a>
             </div>
         </div>
 
@@ -32,6 +33,9 @@
 
         <!-- 摇一摇 -->
         <div class="page3" v-show="pageStatus.three">
+		<div style="display:none" >
+			<audio src="images/5018.mp3" id="music_id" controls="controls"></audio>
+		</div>
             <img src="images/chai.png"  class="chai" :class="[lotteryState ? 'shake':'']" alt="" @click="lotteryHandle">
             <p class="yao_num">摇奖（<span>1</span>）次</p>
             <img src="images/yao_tx.png" class="yao_txt">
@@ -39,7 +43,7 @@
 
         <!-- 京东电子卡和篮球奖品弹框 -->
         <div class="model giftModel" v-show="model.gift">
-            <div class="modelBox">
+            <div class="modelBox">				
                 <div class="modelHeader"></div>
                 <div class="modelBody">
                     <img :src="gift.imgSrc[gift.num]"  :class="[gift.num == 3 ? 'redpackImg':'giftImg']" alt=""> <!--images/gift2.png-->
@@ -79,6 +83,7 @@
         <div class="model resultModel" v-show="model.result" :class="[gift.num == 3 ? 'rewardModelRed' : '']"> 
             <div class="modelBox">
                 <i class="close" @click="model.result = false;pageStatus.three=false;pageStatus.one = true;"><img src="images/close.png" alt=""></i>
+                <i class="share_txt" ><img src="images/share_txt.png" alt=""></i>
                 <div class="modelHeader"></div>
                 <div class="modelBody" v-if="gift.num != 3">
                     <img :src="gift.resultSrc[gift.num]" class="giftImg" alt=""> <!--images/gift2.png-->
@@ -142,6 +147,7 @@
         </div>
     </div>
     <script src="js/zepto.min.js"></script>
+	<script src="js/rock.js"></script>
  <!--    <script type="text/javascript">
         var basep = "images/", //图片目录
             preLoadSource = [ //背景资源
@@ -196,8 +202,8 @@
                         // redpack:false,   
                         result:false,   //奖品结果
                         phone:false,    //填写手机号码
-                        gift:false,      //领奖
-                        sorry:false,      //提示
+                        gift:false,     //领奖
+                        sorry:false,    //提示
                     },                    
                     lotteryState:false,    //抽奖状态
                     open:false,      //是否在开红包
@@ -244,6 +250,11 @@
                     },
                 },
                 methods: {   
+					//开始游戏
+					startHandle:function(){
+						this.pageStatus.three = true;
+						this.rockHandle();
+					},
                     sureSubmitPhone:function(){  //确认提交信息
                         var This = this;
                         This.loading.status = true;
@@ -305,6 +316,7 @@
                             this.sorry.num = 2;
                             return;
                         }
+						
                         if(!this.is_activation){   //未激活
                             this.model.sorry = true;
                             this.sorry.num = 4;
@@ -496,10 +508,19 @@
                     },
                     init: function () {
                         this.getInfo();  //获取个人信息
-                    }
+                    },
+					rockHandle:function(){
+						$(document).on('rock',function(){
+							//if(!clicked){
+								var music_id = document.getElementById('music_id');
+								music_id.play();
+							//}
+						})
+					}
                 },
                 mounted: function () {
-                    this.init();
+                    //this.init();
+					
                 }
             })
         })

@@ -1,3 +1,4 @@
+@charset "utf-8";
 @import "_base.scss";
 @import "_loading_22.scss"; 
 $orange:#f49f4f;
@@ -39,12 +40,13 @@ img{
         height:100%;
         // background: url($URL+'index_bg.jpg') no-repeat #ffd162 ;
         // @include prefixer(background-size,100% 100%);
-        background:rgba(0,0,0,0.8);
+        background:rgba(0,0,0,0.9);
         position: absolute;
         left: 0;
         top: 0;
         // min-height: 43rem;
         height: 100%;   
+		z-index:3;
         .pageBox{
             width: REM(602);
             position:absolute;
@@ -75,7 +77,7 @@ img{
     .page2{
         width: 100%;
         height:100%;
-        background: url($URL+'index_bg.jpg') no-repeat center bottom #ffd162;
+        background: url($URL+'index_bg.jpg') no-repeat center center #ffd162;
         @include prefixer(background-size,100% auto);
         position: absolute;
         left: 0;
@@ -86,14 +88,23 @@ img{
             position: absolute;
             top: REM(30);
             left: REM(30);
+			z-index:2;
         }
         .title{
             width: REM(580);
             position: absolute;
             left: 50%;
-            top: REM(150);
+            top: 50%;
+			margin-top:REMTWO(1000);
             margin-left: REMTWO(580);
         }
+		.rule{
+			width:REM(150);
+			position:absolute;
+			top:50%;
+			
+			right:10%;
+		}
         p{
             position: absolute;
             bottom: REM(140);
@@ -135,7 +146,7 @@ img{
         .chai{
             width: REM(500);
             position: absolute;
-            top:REM(290);
+            top:REM(240);
             left: 50%;
             margin-left:REMTWO(480);
         }
@@ -144,7 +155,7 @@ img{
             position:absolute;
             left:0;
             text-align:center;
-            top:REM(850);
+            top:REM(800);
             font-size:REM(40);
             font-weight:bold;
             color:#ffffff;
@@ -155,7 +166,7 @@ img{
         .yao_txt{
             width:REM(344);
             position:absolute;
-            top:REM(980);
+            top:REM(910);
             left:50%;
             margin-left:REMTWO(344);
         }
@@ -179,9 +190,7 @@ img{
         top: 50%;
         left: 50%;
         @include prefixer(transform,translate(-50%,-50%));
-        background:$WHITE;
         @include prefixer(border-radius,REM(20));
-        // overflow: hidden;
         // .close{
         //     width:REM(69);
         //     height: REM(69);
@@ -193,7 +202,6 @@ img{
         //         content: '.';
         //         font-size: 0;
         //         width: REM(2);
-        //         background: #ffffff;
         //         left: 50%;
         //         top: REM(69);
         //         display: block;
@@ -208,6 +216,13 @@ img{
             left: 50%;
             margin-left: REMTWO(69);
         }
+		.share_txt{
+			width:REM(450);
+			position:absolute;
+			bottom:REM(-230);
+			left:50%;
+			margin-left:REMTWO(450);
+		}
         .modelHeader{
             background: #a77ffb;
             height: REM(80);
@@ -215,6 +230,7 @@ img{
             @include prefixer(border-top-right-radius, REM(20));
         }
         .modelBody{
+			background:$WHITE;
             p{
                 color: $BLACK;
                 font-size: REM(30);
@@ -269,7 +285,7 @@ img{
             position: relative;
             .giftImg{
                 width:REM(437);
-                margin: REM(-80) auto 0;
+                margin:REM(-20) auto 0;
             }
             .redpackImg{
                 width: 100%;
@@ -308,6 +324,7 @@ img{
         }
         .modelFooter{
             padding: REM(30) 0;
+			min-height:1.5rem;
             // background: #f97919;
             .submit{
                 width: REM(250);
@@ -375,10 +392,12 @@ img{
 //结果弹框
 .resultModel{
     .modelBox{
+		@include prefixer(transform,translate(-50%,-65%));
         .modelBody{
             .giftImg{
                 width:REM(422);
-                margin: REM(30) auto 0;
+                margin: 0 auto 0;
+				padding-top:REM(40);
             }
             p{
                 text-align: center;

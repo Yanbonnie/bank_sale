@@ -474,7 +474,8 @@ img{
     .modelBox{
         .img1{
             width: REM(404);
-            margin: REM(30) auto;
+            margin: 0 auto;
+			padding-top:20px;
         }
         p{
             font-size: REM(26);
@@ -482,6 +483,7 @@ img{
             span{
                 font-size: REM(40);
                 color: #f97a19;
+				
             }
         }
     }

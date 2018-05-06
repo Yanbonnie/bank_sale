@@ -22,7 +22,7 @@
         </div>
 
         <!-- 活动规则 -->
-        <div class="page1" v-show="pageStatus.two">
+        <div class="page1" v-show="pageStatus.two" style="z-index:101;">
             <div class="pageBox">
                 <img class="title" src="images/rule_title.png" alt="">
                 <div><img src="images/gift.jpg" alt=""></div>
@@ -36,8 +36,8 @@
 		<div style="display:none" >
 			<audio src="images/5018.mp3" id="music_id" controls="controls"></audio>
 		</div>
-            <img src="images/chai.png"  class="chai" :class="[lotteryState ? 'shake':'']" alt="" @click="lotteryHandle">
-            <p class="yao_num">摇奖（<span>1</span>）次</p>
+            <img src="images/chai.png"  class="chai" :class="[lotteryState ? 'shake':'']" alt="" @click="rockHandle">
+            <p class="yao_num">摇奖（<span>{{prize_num}}</span>）次</p>
             <img src="images/yao_tx.png" class="yao_txt">
         </div>
 
@@ -50,7 +50,7 @@
                     <img class="openRed" v-if="gift.num == 3" src="images/kai.png" @click="openHandle" :class="[open ? 'kai_active':'']" alt=""> <!--kai_active-->
                     <img src="images/line.png" class="line" alt="">
                     <p class="txt">恭喜您</p>
-                    <p>{{gift.txt}}</p> <!--获得京东电子券-->
+                    <p>获得{{gift.txt}}</p> <!--获得京东电子券-->
                     <p v-show="gift.num != 3"><input type="text" name="" id="" v-model="gift.phone" placeholder="请输入您的手机号码"></p>
                 </div>
                 <div class="modelFooter">
@@ -102,7 +102,7 @@
         <!-- 抱歉弹框 -->
         <div class="model sorryModel" v-show="model.sorry">
             <div class="modelBox">
-                <!-- <i class="close"><img src="images/close.png" alt=""></i> -->
+                <i class="close" @click="model.sorry = false"><img src="images/close.png" alt=""></i>
                 <div class="modelHeader"></div>
                 <div class="modelBody">
                     <img class="img1" v-if="sorry.num == 1 || sorry.num == 2" src="images/sorry_1.png" alt="">
@@ -115,7 +115,7 @@
                     <div>
                         <a v-if="sorry.num == 1" href="javascript:;" class="submit"><img src="images/again.png" alt=""></a>
                         <a v-if="sorry.num == 2" href="javascript:;" class="submit"><img src="images/go_sign.png" alt=""></a>
-                        <a v-if="sorry.num == 3" href="javascript:;" class="submit"><img src="images/look_rule.png" alt=""></a>
+                        <a v-if="sorry.num == 3" @click="pageStatus.two = true;" href="javascript:;" class="submit"><img src="images/look_rule.png" alt=""></a>
                     </div>            
                 </div>
             </div>
@@ -152,37 +152,6 @@
         var basep = "images/", //图片目录
             preLoadSource = [ //背景资源
             basep + "back.png",
-            basep + "chai.png",
-            basep + "close.png",
-            basep + "error.png",
-            basep + "gift.png",
-            basep + "gift1.png",
-            basep + "gift2.png",
-            basep + "gift3.png",
-            basep + "go.png",
-            basep + "go_sign.png",
-            basep + "gx_title.png",
-            basep + "index.jpg",
-            basep + "index_bg.jpg",
-            basep + "index_bg2.jpg",
-            basep + "jihuo.png",
-            basep + "kai.png",
-            basep + "kefu.png",
-            basep + "line.png",
-            basep + "logo.png",
-            basep + "phone.png",
-            basep + "red_pack.png",
-            basep + "refuse.png",
-            basep + "result_gift.png",
-            basep + "rule.png",
-            basep + "rule_title.png",
-            basep + "sorry_1.png",
-            basep + "sorry_2.png",
-            basep + "submit.png",
-            basep + "sure.png",
-            basep + "sure_close.png",
-            basep + "title.png",
-            basep + "win_3.png",
             ];
     </script>
     <script src="js/loading.js"></script> -->
@@ -205,7 +174,7 @@
                         gift:false,     //领奖
                         sorry:false,    //提示
                     },                    
-                    lotteryState:false,    //抽奖状态
+                    lotteryState:true,    //抽奖状态
                     open:false,      //是否在开红包
                     gift:{
                         imgSrc:['','images/gift1.png','images/gift2.png','images/gift3.png'],
@@ -218,10 +187,10 @@
                         money:null,     //当prize_level为3时，此参数有值，为红包金额
                     },
                     is_sign:null,           //⽤户是否签约;1为已签约，0为未签约
-                    is_activation:null,     //⽤户是否激活；1为已激活，0为未激活
-                    is_prize:null,          //⽤户本周是否中过奖，1为已中奖，0为未中奖
-                    is_draw:null,           //⽤户是否提交过资料，1为已提交过，0为未提交过
-                    is_week:0,              //0为本周没抽奖，1是本周已抽过奖
+					is_drawing:null,          //是否有奖品未领取，1为是，0为否
+					prize_info:[],            //奖品信息数组 
+					is_prize:null,            //是否中奖
+					prize_num:null,           //抽奖次数
                     sorry:{
                         txt:['','  哎呀，这次没有中奖哦，<br/>试试下次吧','  您还未签约我行微信银行，<br />签约后即可领取礼品哦','摇奖次数已耗完，<br />想要更多机会详见摇奖规则'],
                         num:1,       
@@ -243,17 +212,26 @@
                         txt:'这里是提示内容'
                     },
                     linkHref:{
-                        info:'http://wx.xhwxpos.com/bank_payments/index.php?m=Wap&c=Index&a=ajax_get_status&debug=1',              //用户信息接口
+                        /*info:'http://wx.xhwxpos.com/bank_payments/index.php?m=Wap&c=Index&a=ajax_get_status&debug=1',              //用户信息接口
                         lottery:'http://wx.xhwxpos.com/bank_payments/index.php?m=Wap&c=Index&a=ajax_lottery&debug=1',              //抽奖接口
                         submitPhone:'http://wx.xhwxpos.com/bank_payments/index.php?m=Wap&c=Index&a=ajax_commit_mobile&debug=1',    //提交手机号
-                        openRed:'http://wx.xhwxpos.com/bank_payments/index.php?m=Wap&c=Index&a=ajax_draw&debug=1',                 //打开红包
+                        openRed:'http://wx.xhwxpos.com/bank_payments/index.php?m=Wap&c=Index&a=ajax_draw&debug=1',                 //打开红包*/
+						getUserInfo:'getUserInfo',                              //获取用户信息接口
+						getPrize:'getPrize',                                    //用户抽奖时请求的接口
+	
                     },
                 },
                 methods: {   
 					//开始游戏
 					startHandle:function(){
-						this.pageStatus.three = true;
-						this.rockHandle();
+						if(this.prize_num == 0){
+							this.model.sorry = true;
+							this.sorry.num = 3;
+						}else{
+							this.pageStatus.three = true;
+							this.rockHandle();
+						}
+						
 					},
                     sureSubmitPhone:function(){  //确认提交信息
                         var This = this;
@@ -349,46 +327,36 @@
                         })
                     },
                     lotteryHandle:function(){  //抽奖
-                        var This = this;
-                        this.lotteryState = true;
+						var This = this;
                         //前端测试数据
-                        // var res = {
-                        //     status:0,
-                        //     is_prize:1,
-                        //     prize_level:2,
-                        //     prize_name:'京东券',
-                        //     money:'99',
-                        //     is_week:0,    //0为本周没抽奖，1是本周已抽过奖
-                        // }
-                        // setTimeout(function(){
-                        //     This.lotteryState = false;
-                        //     if(res.status == 0){
-                        //         This.isPrize = res.is_prize;
-                        //         This.is_week = res.is_week;
-                        //         if(This.is_week){  //本周已抽奖
-                        //             This.model.sorry = true;
-                        //             This.sorry.num = 7;
-                        //             return;
-                        //         }
-                        //         if(This.isPrize == 1){   //已中奖
-                        //             This.model.gift = true;
-                        //             This.gift.num = res.prize_level;
-                        //             This.gift.txt = res.prize_name;
-                        //             if(res.prize_level == 3){
-                        //                 This.gift.money = res.money;
-                        //             }
-                        //         }else{  //未中奖
-                        //             This.model.sorry = true;
-                        //             This.sorry.num = 6;
-                        //         }
-                        //     }else if(res.status == 2){   //您本周已抽奖，下周再来吧。
-                        //         This.model.sorry = true;
-                        //         This.sorry.num = 5;
-                        //     }else{
-
-                        //     }                            
-                        // },1000)
-                        // return;
+                        var res = {
+                            status:0,
+                            is_prize:0,
+                            prize_info:[{
+								name:"微信红包",
+								level:3
+							}],
+							prize_num:1
+                        }
+                        setTimeout(function(){
+                            if(res.status == 0){
+                                This.is_prize = res.is_prize;
+                                This.prize_info = res.prize_info;
+                                This.prize_num = res.prize_num;
+								if(This.prize_num > 0 && This.is_prize == 0){   //有抽奖次数，并且没抽奖，可再次抽奖
+									This.lotteryState = true;
+								}
+                                if(This.is_prize == 1){   //已中奖
+                                    This.model.gift = true;
+                                    This.gift.num = res.prize_info[0].level;
+                                    This.gift.txt = res.prize_info[0].name;
+                                }else{  //未中奖
+                                    This.model.sorry = true;
+                                    This.sorry.num = 1;
+                                }
+                            }                           
+                        },1000)
+                        return;
                         $.ajax({
                             url: This.linkHref.lottery,
                             dataType: 'json',
@@ -396,32 +364,22 @@
                             data: {},
                             async: true,
                             success: function (res) {
-                                This.lotteryState = false;
                                 if(res.status == 0){
-                                    This.isPrize = res.is_prize;
-                                    This.is_week = res.is_week;
-                                    if(This.is_week){  //本周已抽奖
-                                        This.model.sorry = true;
-                                        This.sorry.num = 7;
-                                        return;
-                                    }
-                                    if(This.isPrize == 1){   //已中奖
-                                        This.model.gift = true;
-                                        This.gift.num = res.prize_level;
-                                        This.gift.txt = res.prize_name;
-                                        if(res.prize_level == 3){
-                                            This.gift.money = res.money;
-                                        }
-                                    }else{  //未中奖
-                                        This.model.sorry = true;
-                                        This.sorry.num = 6;
-                                    }
-                                }else if(res.status == 2){   //您本周已抽奖，下周再来吧。
-                                    This.model.sorry = true;
-                                    This.sorry.num = 5;
-                                }else{
-    
-                                }
+									This.is_prize = res.is_prize;
+									This.prize_info = res.prize_info;
+									This.prize_num = res.prize_num;
+									if(This.prize_num > 0 && This.is_prize == 0){   //有抽奖次数，并且没抽奖，可再次抽奖
+										This.lotteryState = true;
+									}
+									if(This.is_prize == 1){   //已中奖
+										This.model.gift = true;
+										This.gift.num = res.prize_info[0].level;
+										This.gift.txt = res.prize_info[0].name;
+									}else{  //未中奖
+										This.model.sorry = true;
+										This.sorry.num = 1;
+									}
+								}  
                             },
                             error: function (XMLHttpRequest, textStatus, errorThrown) {
                                 console.log(XMLHttpRequest)
@@ -430,69 +388,57 @@
                     },
                     getInfo: function () {
                         var This = this;
-                        // 前端测试数据
-                        // var res = {
-                        //     is_sign:1,
-                        //     is_activation:0,
-                        //     is_prize:0,
-                        //     is_draw:0,
-                        //     prize_level:3,
-                        //     prize_name:'京东电子券',
-                        //     money:100
-                        // }
-
-                        // This.is_sign = res.is_sign;
-                        // This.is_activation = res.is_activation;
-                        // This.is_prize = res.is_prize;  
-                        // This.is_draw = res.is_draw;
-                        // This.gift.num = res.prize_level;   //中几等奖
-                        // This.gift.txt = res.prize_name;    //中奖名称
-                        // This.gift.money = res.money;
-                        // if(!This.is_sign){ //未签约
-                        //     This.model.sorry = true;
-                        //     This.sorry.num = 2;
-                        //     return;
-                        // }
-                        // if(!This.is_activation){   //未激活
-                        //     This.model.sorry = true;
-                        //     This.sorry.num = 4;
-                        //     return;
-                        // }
-                        // if(This.is_prize){   //本周中奖
-                        //     if(!This.is_draw){   //未领奖
-                        //         This.model.gift = true;
-                        //         return;
-                        //     }
-                        // }
-                        // return false;
+						//前段测试数据
+						var res = {
+							is_sign:1,
+							is_drawing:0,
+							prize_info:[
+								{
+									name:"微信红包",
+									level:3
+								}
+							],
+							prize_num:1,
+						}
+						
+						This.is_sign = res.is_sign;         //是否签约
+						This.is_drawing = res.is_drawing;   //是否有奖品领取
+						This.prize_info = res.prize_info;   //奖品信息数组
+						This.prize_num = res.prize_num;     //抽奖次数
+						if(!This.is_sign){ //未签约
+							This.model.sorry = true;
+							This.sorry.num = 2;
+						}
+						if(This.is_drawing){     //有奖品领取
+							This.model.gift = true;
+							This.gift.num = res.prize_info[0].level; 
+							This.gift.txt = res.prize_info[0].name;
+						}
+									
+						return;
+						This.loading.status = true;
                         $.ajax({
-                            url: This.linkHref.info,
+                            url: This.linkHref.getUserInfo,
                             dataType: 'json',
                             type: 'get',
                             data: {},
                             async: true,
                             success: function (res) {
+								This.loading.status = false;
                                 if(res.status == 0){
-                                    This.is_sign = res.is_sign;
-                                    This.is_activation = res.is_activation;
-                                    This.is_prize = res.is_prize;  
-                                    This.is_draw = res.is_draw;
-                                    This.gift.num = res.prize_level;   //中几等奖
-                                    This.gift.txt = res.prize_name;    //中奖名称
-                                    This.gift.money = res.money;
-                                    // if(!This.is_sign){ //未签约
-                                    //     This.model.sorry = true;
-                                    //     This.sorry.num = 2;
-                                    // }
-                                    // if(!This.is_activation){   //未激活
-                                    //     This.model.sorry = true;
-                                    //     This.sorry.num = 4;
-                                    // }
-                                    if(This.is_prize){   //本周中奖
-                                        if(!This.is_draw){   //未领奖
-                                            This.model.gift = true;
-                                        }
-                                    }
+                                    This.is_sign = res.is_sign;         //是否签约
+									This.is_drawing = res.is_drawing;   //是否有奖品领取
+									This.prize_info = res.prize_info;   //奖品信息数组
+									This.prize_num = res.prize_num;     //抽奖次数
+									if(!This.is_sign){ //未签约
+										This.model.sorry = true;
+										This.sorry.num = 2;
+									}
+									if(This.is_drawing){     //有奖品领取
+										This.model.gift = true;
+										This.gift.num = res.prize_info[0].level; 
+										This.gift.txt = res.prize_info[0].name;
+									}
                                 }
                             },
                             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -509,17 +455,31 @@
                     init: function () {
                         this.getInfo();  //获取个人信息
                     },
-					rockHandle:function(){
+					rockHandle:function(){   //
+						var This = this;
+						
+						/**/
+						if(This.prize_num != 0 && This.lotteryState){  //有抽奖次数
+							This.lotteryState = false;
+							var music_id = document.getElementById('music_id');
+							music_id.play();
+							This.lotteryHandle();   //抽奖接口
+							
+						}
+							
+						/**/
 						$(document).on('rock',function(){
-							//if(!clicked){
+							if(This.prize_num != 0 && This.lotteryState){  //有抽奖次数
+								This.lotteryState = false;
 								var music_id = document.getElementById('music_id');
 								music_id.play();
-							//}
+								This.lotteryHandle();   //抽奖接口
+							}
 						})
 					}
                 },
                 mounted: function () {
-                    //this.init();
+                    this.init();
 					
                 }
             })

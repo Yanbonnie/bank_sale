@@ -3,7 +3,7 @@
 @import "_loading_22.scss"; 
 $orange:#f49f4f;
 .wrap{
-    // visibility: hidden;
+    visibility: hidden;
 }
 html,body{
     width: 100%;
@@ -456,7 +456,9 @@ img{
             img{
                 width: REM(176);
                 display: block;
-                margin: REM(50) auto;
+                // margin: REM(50) auto;
+                margin:0 auto;
+                padding-top:REM(50);
             }
             h3{
                 font-size: REM(38);

@@ -102,7 +102,7 @@
         <!-- 抱歉弹框 -->
         <div class="model sorryModel" v-show="model.sorry">
             <div class="modelBox">
-                <i class="close" @click="model.sorry = false"><img src="images/close.png" alt=""></i>
+                <i class="close" @click="model.sorry = false" v-if="sorry.num == 3"><img src="images/close.png" alt=""></i>
                 <div class="modelHeader"></div>
                 <div class="modelBody">
                     <img class="img1" v-if="sorry.num == 1 || sorry.num == 2" src="images/sorry_1.png" alt="">
@@ -113,8 +113,8 @@
                 </div>
                 <div class="modelFooter clf">
                     <div>
-                        <a v-if="sorry.num == 1" href="javascript:;" class="submit"><img src="images/again.png" alt=""></a>
-                        <a v-if="sorry.num == 2" href="javascript:;" class="submit"><img src="images/go_sign.png" alt=""></a>
+                        <a v-if="sorry.num == 1" href="javascript:;" class="submit" @click="againHandle"><img src="images/again.png" alt=""></a>
+                        <a v-if="sorry.num == 2" href="javascript:;" class="submit" ><img src="images/go_sign.png" alt=""></a>
                         <a v-if="sorry.num == 3" @click="pageStatus.two = true;" href="javascript:;" class="submit"><img src="images/look_rule.png" alt=""></a>
                     </div>            
                 </div>
@@ -426,7 +426,7 @@
 						//前段测试数据
 						/*var res = {
                             status:0,
-							is_sign:1,
+							is_sign:0,
 							is_drawing:1,
 							prize_info:[
 								{
@@ -443,10 +443,10 @@
                                 This.is_drawing = res.is_drawing;   //是否有奖品领取
                                 This.prize_info = res.prize_info;   //奖品信息数组
                                 This.prize_num = res.prize_num;     //抽奖次数
-                                console.log(This.prize_num)
                                 if(!This.is_sign){ //未签约
                                     This.model.sorry = true;
                                     This.sorry.num = 2;
+                                    return;
                                 }
                                 if(This.is_drawing){     //有奖品领取
                                     This.model.gift = true;
@@ -455,8 +455,8 @@
                                 }
                             }
                         },1000)									
-						return;*/
-						
+						return;
+						*/
                         $.ajax({
                             url: This.linkHref.getUserInfo,
                             dataType: 'json',
@@ -494,6 +494,15 @@
                     },
                     init: function () {
                         this.getInfo();  //获取个人信息
+                    },
+                    //再试一次
+                    againHandle:function(){
+                        if(this.prize_num == 0){
+                            this.dialog.status=true;
+                            this.dialog.txt = '抽奖次数已用完';
+                        }else{
+                            this.model.sorry = false;
+                        }
                     },
 					rockHandle:function(){   //
 						var This = this;

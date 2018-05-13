@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>稠行直销</title>
+    <link rel="stylesheet" href="__STATIC__/css/index.css">
+    <link rel="stylesheet" href="__STATIC__/css/weui.css">
+</head>
+<body>
+    <div class="wrap index_page" id="index-box">         
+        <!-- 首页 -->
+        <div class="page2" v-show="pageStatus.one">
+            <img src="__STATIC__/images/logo.png" class="logo" alt="">
+            <img src="__STATIC__/images/title.png" class="title" alt="">
+            <img src="__STATIC__/images/rule.png" @click="pageStatus.two = true" class="rule" alt="">
+            <p>活动期间，体验我行直销银行完成注册、激活、理财等业务，即可在微信银行进行抽奖活动，有机会赢取京东消费卡、加油卡、现金红包等丰厚奖品。</p>
+            <div class="btn-box">
+                <a href="javascript:;" @click="startHandle"><img src="__STATIC__/images/start.png" alt=""></a>
+            </div>
+        </div>
+
+        <!-- 活动规则 -->
+        <div class="page1" v-show="pageStatus.two" style="z-index:101;">
+            <div class="pageBox">
+                <img class="title" src="__STATIC__/images/rule_title.png" alt="">
+                <div><img src="__STATIC__/images/gift.jpg" alt=""></div>
+               <a href="http://testwxbank207.czcb.com.cn/wxbank/binding.html?wxid={$openid}"><img src="__STATIC__/images/add.png" class="add"></a>
+                <img src="__STATIC__/images/back_btn.png" class="back" @click="pageStatus.two = false">
+            </div>
+        </div>
+
+        <!-- 摇一摇 -->
+        <div class="page3" v-show="pageStatus.three">
+		<div style="display:none" >
+			<audio src="__STATIC__/images/5018.mp3" id="music_id" controls="controls"></audio>
+		</div>
+            <img src="__STATIC__/images/chai.png"  class="chai" :class="[lotteryState ? 'shake':'']" alt="" @click="rockHandle2">
+            <p class="yao_num">摇奖（<span>{{prize_num}}</span>）次</p>
+            <img src="__STATIC__/images/yao_tx.png" class="yao_txt">
+        </div>
+
+        <!-- 京东电子卡和篮球奖品弹框 -->
+        <div class="model giftModel" v-show="model.gift">
+            <div class="modelBox">				
+                <div class="modelHeader"></div>
+                <div class="modelBody">
+                    <img :src="gift.imgSrc[gift.num]"  :class="[gift.num == 3 ? 'redpackImg':'giftImg']" alt=""> <!--images/gift2.png-->
+                    <img class="openRed" v-if="gift.num == 3" src="__STATIC__/images/kai.png" @click="openHandle" :class="[open ? 'kai_active':'']" alt=""> <!--kai_active-->
+                    <img src="__STATIC__/images/line.png" class="line" alt="">
+                    <p class="txt">恭喜您</p>
+                    <p>获得{{gift.txt}}</p> <!--获得京东电子券-->
+                    <p v-show="gift.num != 3"><input type="text" name="" id="" v-model="gift.phone" placeholder="请输入您的手机号码"></p>
+                </div>
+                <div class="modelFooter">
+                    <span class="submit" v-show="gift.num != 3" @click="submitSure">
+                        <img src="__STATIC__/images/submit.png"  alt="">
+                    </span>                    
+                </div>
+            </div>
+        </div>        
+        <!-- 确认电话号码弹框 -->
+        <div class="model phoneModel" v-show="model.phone">
+            <div class="modelBox">
+                <div class="modelHeader"></div>
+                <div class="modelBody">
+                    <img src="__STATIC__/images/phone.png" alt="">
+                    <p>您输入的手机号码为</p>
+                    <h3>{{gift.phone}}</h3>
+                </div>
+                <div class="modelFooter clf">
+                    <span class="back" @click="model.gift = true;model.phone = false">
+                        <img src="__STATIC__/images/back.png"  alt="">
+                    </span>
+                    <span class="sure" @click="sureSubmitPhone">
+                        <img src="__STATIC__/images/sure.png"  alt="">
+                    </span>                    
+                </div>
+            </div>
+        </div>
+        <!-- 奖品结果弹框 -->
+        <div class="model resultModel" v-show="model.result" :class="[gift.num == 3 ? 'rewardModelRed' : '']"> 
+            <div class="modelBox">
+                <i class="close" @click="model.result = false;"><img src="__STATIC__/images/close.png" alt=""></i>
+                <!-- <i class="share_txt" ><img src="images/share_txt.png" alt=""></i> -->
+                <div class="modelHeader"></div>
+                <div class="modelBody" v-if="gift.num != 3">
+                    <img :src="gift.resultSrc[gift.num]" class="giftImg" alt=""> <!--images/gift2.png-->
+                    <p class="txt" v-html="gift.resultTxt[gift.num]"></p>
+                    <p v-if="gift.num == 1 || gift.num == 2">将发送至该{{gift.phone}}号码</p>
+                </div>
+                <div class="modelMoney" v-else>
+                    <img :src="gift.resultSrc[gift.num]" alt=""> <!--images/gift2.png-->
+                    <p>{{gift.money}}<b>元</b></p>
+                </div>
+                <div class="modelFooter">
+                    <p>注意信息查收，如有疑问<br>请拨打客服电话：0571-96527</p>                    
+                </div>
+            </div>
+        </div>
+        <!-- 抱歉弹框 -->
+        <div class="model sorryModel" v-show="model.sorry">
+            <div class="modelBox">
+                <i class="close" @click="model.sorry = false" v-if="sorry.num != 1"><img src="__STATIC__/images/close.png" alt=""></i>
+                <div class="modelHeader"></div>
+                <div class="modelBody">
+                    <img class="img1" v-if="sorry.num == 1 || sorry.num == 2" src="__STATIC__/images/sorry_1.png" alt="">
+                    <img class="img1" v-else src="__STATIC__/images/sorry_2.png" alt="">
+                    <div>
+                        <p v-html="sorry.txt[sorry.num]"></p>
+                    </div>
+                </div>
+                <div class="modelFooter clf">
+                    <div>
+                        <a v-if="sorry.num == 1" href="javascript:;" @click="againHandle" class="submit"><img src="__STATIC__/images/again.png" alt=""></a>
+                        <a v-if="sorry.num == 2" href="http://testwxbank207.czcb.com.cn/wxbank/binding.html?wxid={$openid}" class="submit"><img src="__STATIC__/images/go_sign.png" alt=""></a>
+                        <a v-if="sorry.num == 3" @click="pageStatus.two = true;" href="javascript:;" class="submit"><img src="__STATIC__/images/look_rule.png" alt=""></a>
+                    </div>            
+                </div>
+            </div>
+        </div>
+        <!-- 加载中 -->
+        <div id="loadingToast" v-show="loading.status">
+            <div class="weui-mask_transparent"></div>
+            <div class="weui-toast">
+                <i class="weui-loading weui-icon_toast"></i>
+                <p class="weui-toast__content" v-html="loading.txt"></p>
+            </div>
+        </div>
+        <!--按钮提示框-->
+        <!--BEGIN dialog2-->
+        <div class="js_dialog" id="iosDialog2" v-show="dialog.status">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+                <div class="weui-dialog__bd">{{dialog.txt}}</div>
+                <div class="weui-dialog__ft">
+                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" @click="dialog.status = false">知道了</a>
+                </div>
+            </div>
+        </div>
+        <!-- 提示框，1000消失 -->
+        <div class="tipBox" v-show="alert.status">
+            <div class="tibBox_inner">
+                <p v-html="alert.txt"></p>
+            </div>
+        </div>
+    </div>
+    <script src="__STATIC__/js/zepto.min.js"></script>
+	<script src="__STATIC__/js/jweixin-1.0.0.js"></script>
+	<script src="__STATIC__/js/rock.js"></script>
+    <script type="text/javascript">
+        var basep = "{$static_url}images/", //图片目录
+            preLoadSource = [ //背景资源
+                basep + "add.png",
+                basep + "again.png",
+                basep + "back.png",
+                basep + "back_btn.png",
+                basep + "bg.jpg",
+                basep + "chai.png",
+                basep + "close.png",
+                basep + "gift.jpg",
+                basep + "gift1.png",
+                basep + "gift2.png",
+                basep + "gift3.png",
+                basep + "go_sign.png",
+                basep + "index_bg.jpg",
+                basep + "kai.png",
+                basep + "kefu.png",
+                basep + "line.png",
+                basep + "logo.png",
+                basep + "look_rule.png",
+                basep + "phone.png",
+                basep + "red_pack.png",
+                basep + "result_gift.png",
+                basep + "result_gift2.png",
+                basep + "rule.png",
+                basep + "rule_title.png",
+                basep + "share_txt.png",
+                basep + "sorry_1.png",
+                basep + "sorry_2.png",
+                basep + "start.png",
+                basep + "submit.png",
+                basep + "sure.png",
+                basep + "title.png",
+                basep + "win_3.png",
+                basep + "yao_tx.png"
+            ];
+    </script>
+    <script src="__STATIC__/js/loading.js"></script>
+    <script src="__STATIC__/js/vue.min.js"></script>
+    <script>
+        //加载资源数组必须在loading之前进行配置
+        $(function () {
+            new Vue({
+                el: "#index-box",
+                data: {
+                    pageStatus:{
+                        one:true,        //首页
+                        two:false,       //活动规则
+                        three:false,     //摇一摇开奖页
+                    },
+                    model:{
+                        // redpack:false,   
+                        result:false,   //奖品结果
+                        phone:false,    //填写手机号码
+                        gift:false,     //领奖
+                        sorry:false,    //提示
+                    },                    
+                    lotteryState:true,    //抽奖状态
+                    open:false,           //是否在开红包
+                    gift:{
+                        imgSrc:['','{$static_url}images/gift1.png','{$static_url}images/gift2.png','{$static_url}images/gift3.png'],
+                        resultSrc:['','{$static_url}images/result_gift.png','{$static_url}images/result_gift2.png','{$static_url}images/win_3.png'],
+                        resultTxt:['','京东电子券','加油卡'],
+                        txt:'',      //奖品名称
+                        num:null,      //中奖等级；当is_prize为1时，此参数有值 ，1为京东券，2为加油卡，3为微信红包
+                        phone:'',
+                        money:null,     //当prize_level为3时，此参数有值，为红包金额
+                    },
+                    is_sign:null,           //⽤户是否签约;1为已签约，0为未签约
+					is_drawing:null,          //是否有奖品未领取，1为是，0为否
+					prize_info:[],            //奖品信息数组 
+					is_prize:null,            //是否中奖
+					prize_num:null,           //抽奖次数
+                    sorry:{
+                        txt:['','  哎呀，这次没有中奖哦，<br/>试试下次吧','  您还未签约我行微信银行，<br />签约后即可领取礼品哦','摇奖次数已耗完，<br />想要更多机会详见摇奖规则'],
+                        num:1,       
+                        //1-哎呀，这次没有中奖哦，<br/>试试下次吧 (再试一次) 
+                        //2-您还未签约我行微信银行，<br />签约后即可领取礼品哦 (去签约)
+                        //3-摇奖次数已耗完，<br />想要更多机会详见摇奖规则（查看规则）
+                    },
+                     
+                    loading:{        //加载中弹框
+                        status:false,
+                        txt:'加载中...'
+                    },
+                    dialog:{    //带按钮提示框
+                        status:false,
+                        txt:'这里是提示内容'
+                    },
+                    alert:{     //提示自动消失框
+                        status:false,
+                        txt:'这里是提示内容'
+                    },
+                    linkHref:{
+						getUserInfo:"{:U('Wap/Index/getUserInfo')}",                              //获取用户信息接口
+						getPrize:"{:U('Wap/Index/getPrize')}",                                    //用户抽奖时请求的接口
+                        postUserInfo:"{:U('Wap/Index/postUserInfo')}",                            //提交信息接口
+                        getOpenRed:"{:U('Wap/Index/getOpenRed')}",                                //打开红包请求接口
+                    },
+                },
+                methods: {   
+					//开始游戏
+					startHandle:function(){
+                        var This = this;
+                        This.loading.status = true;
+                        $.ajax({
+                            url: This.linkHref.getUserInfo,
+                            dataType: 'json',
+                            type: 'get',
+                            data: {},
+                            async: true,
+                            success: function (res) {
+								This.loading.status = false;
+                                if(res.status == 0){
+                                    This.is_sign = res.is_sign;         //是否签约
+									This.is_drawing = res.is_drawing;   //是否有奖品领取
+									This.prize_info = res.prize_info;   //奖品信息数组
+									This.prize_num = res.prize_num;     //抽奖次数
+									if(!This.is_sign){ //未签约
+										This.model.sorry = true;
+										This.sorry.num = 2;
+									}
+									if(This.is_drawing){     //有奖品领取
+										This.model.gift = true;
+										This.gift.num = res.prize_info[0].level; 
+										This.gift.txt = res.prize_info[0].name;
+                                    }
+                                    console.log(This.prize_num)
+                                    if(This.prize_num == 0){
+                                        This.model.sorry = true;
+                                        This.sorry.num = 3;
+                                    }else{
+                                        This.pageStatus.three = true;
+                                        This.rockHandle();
+                                    }
+                                }else{
+                                    This.dialog.status=true;
+                                    This.dialog.txt = res.msg;
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log(XMLHttpRequest)
+                            }
+                        })	
+					},
+                    sureSubmitPhone:function(){  //确认提交信息
+                        var This = this;
+                        This.loading.status = true;
+                        This.loading.txt = '提交中...';
+                        $.ajax({
+                            url: This.linkHref.postUserInfo,
+                            dataType: 'json',
+                            type: 'post',
+                            data: {
+                                'mobile':This.gift.phone
+                            },
+                            async: true,
+                            success: function (res) {
+                                This.loading.status = false;
+                                This.loading.txt = '';
+                                if(res.status == 0){
+                                    This.model.phone = false;
+                                    This.model.result = true;
+                                }else{
+                                    This.dialog.status=true;
+                                    This.dialog.txt = res.msg;
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log(XMLHttpRequest)
+                            }
+                        })
+                    },
+                    submitSure:function(){   //手机号码提交按钮
+                        var This = this;
+                        if(this.gift.phone == ''){
+                            this.alert.status = true;
+                            this.alert.txt = '手机号码不能为空';
+                            setTimeout(function(){
+                                This.alert.status = false;
+                            },1500)
+                            return;
+                        }
+                        if(!this.isPhone(this.gift.phone)){
+                            this.alert.status = true;
+                            this.alert.txt = '手机号码格式不正确';
+                            setTimeout(function(){
+                                This.alert.status = false;
+                            },1500)
+                            return;
+                        }
+                        this.model.gift = false;
+                        this.model.phone = true;
+
+                    },
+                    openHandle:function(){  //开红包
+                        var This = this;
+                        this.open = true;
+                        $.ajax({
+                            url: This.linkHref.getOpenRed,
+                            dataType: 'json',
+                            type: 'get',
+                            data: {},
+                            async: true,
+                            success: function (res) {
+                                setTimeout(function(){
+                                    This.open = false;
+                                    if(res.status == 0){                                    
+                                        This.model.result = true;
+                                        This.model.gift = false;
+                                        This.gift.money = res.money;
+                                    }else{
+                                        This.dialog.status=true;
+                                        This.dialog.txt = res.msg;
+                                    }
+                                },1000)
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log(XMLHttpRequest)
+                            }
+                        })
+                    },
+                    lotteryHandle:function(){  //抽奖
+						var This = this;
+                        $.ajax({
+                            url: This.linkHref.getPrize,
+                            dataType: 'json',
+                            type: 'get',
+                            data: {},
+                            async: true,
+                            success: function (res) {
+                                if(res.status == 0){
+                                    This.is_prize = res.is_prize;                                    
+                                    This.prize_num = res.prize_num;
+                                    if(This.prize_num > 0){   //有抽奖次数，不管中没中奖，都有机会再次抽奖
+                                        This.lotteryState = true;
+                                    }
+                                    if(This.is_prize == 1){   //已中奖
+                                        This.prize_info = res.prize_info;
+                                        This.model.gift = true;
+                                        This.gift.num = res.prize_info[0].level;
+                                        This.gift.txt = res.prize_info[0].name;
+                                    }else{  //未中奖
+                                        This.model.sorry = true;
+                                        This.sorry.num = 1;
+                                    }
+                                }else{
+                                    This.dialog.status=true;
+                                    This.dialog.txt = res.msg;
+                                }  
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log(XMLHttpRequest)
+                            }
+                        })
+                    },
+                    getInfo: function () {
+                        var This = this;
+                        This.loading.status = true;						
+                        $.ajax({
+                            url: This.linkHref.getUserInfo,
+                            dataType: 'json',
+                            type: 'get',
+                            data: {},
+                            async: true,
+                            success: function (res) {
+								This.loading.status = false;
+                                if(res.status == 0){
+                                    This.is_sign = res.is_sign;         //是否签约
+									This.is_drawing = res.is_drawing;   //是否有奖品领取
+									This.prize_info = res.prize_info;   //奖品信息数组
+									This.prize_num = res.prize_num;     //抽奖次数
+									if(!This.is_sign){ //未签约
+										This.model.sorry = true;
+										This.sorry.num = 2;
+									}
+									if(This.is_drawing){     //有奖品领取
+										This.model.gift = true;
+										This.gift.num = res.prize_info[0].level; 
+										This.gift.txt = res.prize_info[0].name;
+                                    }
+                                }else{
+                                    This.dialog.status=true;
+                                    This.dialog.txt = res.msg;
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                console.log(XMLHttpRequest)
+                            }
+                        })
+                    },
+                    isPhone : function(str) {  //判断是否是正确的手机
+                        if(typeof str === 'number'){
+                            str = str.toString();
+                        }
+                        return /^0?1[3|4|5|7|8][0-9]\d{8}$/.test(str);
+                    },
+                    init: function () {
+                        this.getInfo();  //获取个人信息
+                    },
+					rockHandle:function(){   //
+                        var This = this;                        
+						$(document).on('rock',function(){
+							if(This.prize_num != 0 && This.lotteryState){  //有抽奖次数                                
+                                This.lotteryState = false;
+								wx.config({
+									// 配置信息, 即使不正确也能使用 wx.ready
+									debug: false,
+									appId: '',
+									timestamp: 1,
+									nonceStr: '',
+									signature: '',
+									jsApiList: []
+								});
+								wx.ready(function() {
+									var music_id = document.getElementById('music_id');
+									music_id.play();
+									This.lotteryHandle();   //抽奖接口
+								});								
+                            }
+						})
+                    },
+                    //测试
+                    rockHandle2(){
+                        var This = this;
+						
+						//前端测试数据
+						if(This.prize_num != 0 && This.lotteryState){  //有抽奖次数
+                            This.lotteryState = false;
+                            var music_id = document.getElementById('music_id');
+                            music_id.src = basep+'5018.mp3';
+                            music_id.play();
+                            This.lotteryHandle();   //抽奖接口
+                            
+                        }
+                    },
+                    //再试一次
+                    againHandle:function(){
+                        if(this.prize_num == 0){
+                            this.dialog.status=true;
+                            this.dialog.txt = '抽奖次数已用完';
+                        }else{
+                            this.model.sorry = false;
+                        }
+                    },
+                },
+                mounted: function () {
+                    this.init();
+					
+                }
+            })
+        })
+    </script>
+
+</body>
+
+</html>

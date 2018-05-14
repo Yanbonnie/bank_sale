@@ -43,7 +43,7 @@ $(document).ready(function () {
     }
     if (window.DeviceMotionEvent) {
         window.addEventListener('devicemotion', deviceMotionHandler, false);
+    }else{
+        alert("您的手机不支持DeviceMotionEvent属性，请点击抽奖");
     }
-	
-	
 });

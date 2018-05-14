@@ -102,7 +102,7 @@
         <!-- 抱歉弹框 -->
         <div class="model sorryModel" v-show="model.sorry">
             <div class="modelBox">
-                <i class="close" @click="model.sorry = false" v-if="sorry.num == 3"><img src="images/close.png" alt=""></i>
+                <i class="close" @click="model.sorry = false" v-if="sorry.num != 1"><img src="images/close.png" alt=""></i>
                 <div class="modelHeader"></div>
                 <div class="modelBody">
                     <img class="img1" v-if="sorry.num == 1 || sorry.num == 2" src="images/sorry_1.png" alt="">
@@ -252,14 +252,15 @@
                 methods: {   
 					//开始游戏
 					startHandle:function(){
-						if(this.prize_num == 0){
-							this.model.sorry = true;
-							this.sorry.num = 3;
-						}else{
-							this.pageStatus.three = true;
-							this.rockHandle();
-						}
-						
+                        if(this.getInfo()){
+                            if(this.prize_num == 0){
+                                this.model.sorry = true;
+                                this.sorry.num = 3;
+                            }else{
+                                this.pageStatus.three = true;
+                                this.rockHandle();
+                            }
+                        }
 					},
                     sureSubmitPhone:function(){  //确认提交信息
                         var This = this;
@@ -479,6 +480,7 @@
 										This.gift.num = res.prize_info[0].level; 
 										This.gift.txt = res.prize_info[0].name;
 									}
+                                    return true;
                                 }
                             },
                             error: function (XMLHttpRequest, textStatus, errorThrown) {

@@ -15,7 +15,7 @@
             <img src="images/logo.png" class="logo" alt="">
             <img src="images/title.png" class="title" alt="">
             <img src="images/rule.png" @click="pageStatus.two = true" class="rule" alt="">
-            <p>活动期间，体验我行直销银行完成注册、激活、理财等业务，即可在微信银行进行抽奖活动，有机会赢取京东消费卡、加油卡、现金红包等丰厚奖品。</p>
+            <p class="tipBg">活动期间，体验我行直销银行完成注册、激活、理财等业务，即可在微信银行进行抽奖活动，有机会赢取京东消费卡、加油卡、现金红包等丰厚奖品。</p>
             <div class="btn-box">
                 <a href="javascript:;" @click="startHandle"><img src="images/start.png" alt=""></a>
             </div>
@@ -196,9 +196,9 @@
                 el: "#index-box",
                 data: {
                     pageStatus:{
-                        one:false,        //首页
+                        one:true,        //首页
                         two:false,       //活动规则
-                        three:true,     //摇一摇开奖页
+                        three:false,     //摇一摇开奖页
                     },
                     model:{
                         // redpack:false,   
@@ -396,7 +396,7 @@
                                     This.sorry.num = 1;
                                 }
                             }                           
-                        },1800)
+                        },1000)
                         return;
                         $.ajax({
                             url: This.linkHref.lottery,

@@ -51,11 +51,15 @@
                     <img src="images/line.png" class="line" alt="">
                     <p class="txt">恭喜您</p>
                     <p>获得{{gift.txt}}</p> <!--获得京东电子券-->
-                    <p v-show="gift.num != 3"><input type="text" name="" id="" v-model="gift.phone" placeholder="请输入您的手机号码"></p>
+                    <p class="inputBox" v-show="gift.num != 3"><input type="text" name="" id="" v-model="gift.phone" placeholder="手机号"></p>
+                    <p class="inputBox">
+                        <input type="text" placeholder="验证码">
+                        <span>验证码</span>
+                    </p>
                 </div>
                 <div class="modelFooter">
                     <span class="submit" v-show="gift.num != 3" @click="submitSure">
-                        <img src="images/submit.png"  alt="">
+                        <img src="images/submit_gift.png"  alt="">
                     </span>                    
                 </div>
             </div>
@@ -99,6 +103,24 @@
                 </div>
             </div>
         </div>
+        <!-- 身份验证框 -->
+        <div class="model giftModel" v-show="model.yz">
+            <div class="modelBox">				
+                <div class="modelHeader"></div>
+                <div class="modelBody">
+                    <img src="images/yz.png" class="yz" alt="">
+                    <p class="certNo">
+                        <input type="text" placeholder="身份证号码">
+                    </p>
+                    <p class="tip">此证件号码仅用于稠州银行抽奖识别</p>
+                </div>
+                <div class="modelFooter">
+                    <span class="submit">
+                        <img src="images/sure_2.png"  alt="">
+                    </span>                    
+                </div>
+            </div>
+        </div> 
         <!-- 抱歉弹框 -->
         <div class="model sorryModel" v-show="model.sorry">
             <div class="modelBox">
@@ -201,10 +223,11 @@
                     },
                     model:{
                         // redpack:false,   
-                        result:false,   //奖品结果
+                        result:false,    //奖品结果
                         phone:false,    //填写手机号码
                         gift:false,     //领奖
                         sorry:false,    //提示
+                        yz:true
                     },                    
                     lotteryState:true,    //抽奖状态
                     open:false,           //是否在开红包
@@ -213,14 +236,14 @@
                         resultSrc:['','images/result_gift.png','images/result_gift2.png','images/win_3.png'],
                         resultTxt:['','京东电子券','加油卡'],
                         txt:'',      //奖品名称
-                        num:null,      //中奖等级；当is_prize为1时，此参数有值 ，1为京东券，2为加油卡，3为微信红包
+                        num:1,      //中奖等级；当is_prize为1时，此参数有值 ，1为京东券，2为加油卡，3为微信红包
                         phone:'',
                         money:null,     //当prize_level为3时，此参数有值，为红包金额
                     },
                     is_sign:null,           //⽤户是否签约;1为已签约，0为未签约
 					is_drawing:null,          //是否有奖品未领取，1为是，0为否
 					prize_info:[],            //奖品信息数组 
-					is_prize:null,            //是否中奖
+					is_prize:1,               //是否中奖
 					prize_num:null,           //抽奖次数
                     sorry:{
                         txt:['','  哎呀，这次没有中奖哦，<br/>试试下次吧','  您还未签约我行微信银行，<br />签约后即可领取礼品哦','摇奖次数已耗完，<br />想要更多机会详见摇奖规则'],
@@ -527,7 +550,7 @@
 					}
                 },
                 mounted: function () {
-                    this.init();
+                    // this.init();
 					
                 }
             })

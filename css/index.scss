@@ -283,6 +283,7 @@ img{
         }
         .modelBody{
             position: relative;
+            padding-bottom: REM(40);
             .giftImg{
                 width:REM(437);
                 margin:REM(-20) auto 0;
@@ -311,15 +312,49 @@ img{
                &.txt{                   
                    margin-top: REM(-50);
                } 
-               input{
-                   width: REM(450);
-                   height: REM(60);
-                   text-indent: REM(30);
-                   line-height: REM(60);
-                   border: 1px #b3b3b3 solid;
-                   margin: REM(20) auto REM(30);
-                   @include prefixer(border-radius,REM(50));
+               &.inputBox{
+                   display: flex;
+                   width: 80%;
+                   margin: 0 auto;
+                   border-bottom: 1px #ccc solid;
+                   padding: REM(20) 0;
+                   input{
+                       display: block;
+                       flex-grow: 1;
+                       border: 0;
+                       font-size: REM(25);
+                   }
+                   span{
+                       flex-basis: REM(150);
+                        background: #522ba2;
+                        color: #fff;
+                        @include prefixer(border-radius,REM(4));
+                        font-size: REM(20);
+                        height: REM(50);
+                        line-height: REM(50);
+                   }
                }
+            }
+            .yz{
+                width: 80%;
+                margin: 0 auto;
+                padding-top: REM(20);
+            }
+            .certNo{
+                border: 1px #ccc solid;
+                width: 70%;
+                margin: REM(20) auto;
+                line-height: REM(50);
+                @include prefixer(border-radius,REM(10));
+                font-size: REM(24);
+                input{
+                    border: 0;
+                    text-align: center;
+                }
+            }
+            .tip{
+                font-size: REM(20);
+                color: #c58b46;
             }
         }
         .modelFooter{

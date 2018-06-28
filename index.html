@@ -15,7 +15,7 @@
             <img src="images/logo.png" class="logo" alt="">
             <img src="images/title.png" class="title" alt="">
             <img src="images/rule.png" @click="pageStatus.two = true" class="rule" alt="">
-            <p class="tipBg">活动期间，体验我行直销银行完成注册、激活、理财等业务，即可在微信银行进行抽奖活动，有机会赢取京东消费卡、加油卡、现金红包等丰厚奖品。</p>
+            <p>活动期间，体验我行直销银行完成注册、激活、理财等业务，即可在微信银行进行抽奖活动，有机会赢取京东消费卡、加油卡、现金红包等丰厚奖品。</p>
             <div class="btn-box">
                 <a href="javascript:;" @click="startHandle"><img src="images/start.png" alt=""></a>
             </div>
@@ -36,7 +36,7 @@
 		<div style="display:none" >
 			<audio src="images/5018.mp3" id="music_id" controls="controls"></audio>
 		</div>
-            <img src="images/chai.png"  class="chai" id="chaiBox" :class="[lotteryState ? 'shake':'', ballState ? 'ball' : '']" alt="" @click="rockHandle2">
+            <img src="images/chai.png"  class="chai" :class="[lotteryState ? 'shake':'']" alt="" @click="rockHandle">
             <p class="yao_num">摇奖（<span>{{prize_num}}</span>）次</p>
             <img src="images/yao_tx.png" class="yao_txt">
         </div>
@@ -124,7 +124,7 @@
         <!-- 抱歉弹框 -->
         <div class="model sorryModel" v-show="model.sorry">
             <div class="modelBox">
-                <i class="close" @click="model.sorry = false" v-if="sorry.num != 1"><img src="images/close.png" alt=""></i>
+                <i class="close" @click="model.sorry = false" v-if="sorry.num == 3"><img src="images/close.png" alt=""></i>
                 <div class="modelHeader"></div>
                 <div class="modelBody">
                     <img class="img1" v-if="sorry.num == 1 || sorry.num == 2" src="images/sorry_1.png" alt="">
@@ -138,7 +138,6 @@
                         <a v-if="sorry.num == 1" href="javascript:;" class="submit" @click="againHandle"><img src="images/again.png" alt=""></a>
                         <a v-if="sorry.num == 2" href="javascript:;" class="submit" ><img src="images/go_sign.png" alt=""></a>
                         <a v-if="sorry.num == 3" @click="pageStatus.two = true;" href="javascript:;" class="submit"><img src="images/look_rule.png" alt=""></a>
-                        <a v-if="sorry.num == 4" href="javascript:;" class="submit"><img src="images/add.png" alt=""></a>
                     </div>            
                 </div>
             </div>
@@ -231,7 +230,6 @@
                         yz:false
                     },                    
                     lotteryState:true,    //抽奖状态
-                    ballState:false,      //弹跳状态
                     open:false,           //是否在开红包
                     gift:{
                         imgSrc:['','images/gift1.png','images/gift2.png','images/gift3.png'],
@@ -248,11 +246,8 @@
 					is_prize:1,               //是否中奖
 					prize_num:null,           //抽奖次数
                     sorry:{
-                        txt:['','哎呀，这次没有中奖哦，<br/>试试下次吧',
-                        '您还未签约我行微信银行，<br />签约后即可领取礼品哦',
-                        '摇奖次数已耗完，<br />想要更多机会详见摇奖规则',
-                        '哎呀，您的摇一摇次数已经用完了<br/>快快去增加吧'],
-                        num:4,       
+                        txt:['','  哎呀，这次没有中奖哦，<br/>试试下次吧','  您还未签约我行微信银行，<br />签约后即可领取礼品哦','摇奖次数已耗完，<br />想要更多机会详见摇奖规则'],
+                        num:1,       
                         //1-哎呀，这次没有中奖哦，<br/>试试下次吧 (再试一次) 
                         //2-您还未签约我行微信银行，<br />签约后即可领取礼品哦 (去签约)
                         //3-摇奖次数已耗完，<br />想要更多机会详见摇奖规则（查看规则）
@@ -280,15 +275,14 @@
                 methods: {   
 					//开始游戏
 					startHandle:function(){
-                        if(this.getInfo()){
-                            if(this.prize_num == 0){
-                                this.model.sorry = true;
-                                this.sorry.num = 3;
-                            }else{
-                                this.pageStatus.three = true;
-                                this.rockHandle();
-                            }
-                        }
+						if(this.prize_num == 0){
+							this.model.sorry = true;
+							this.sorry.num = 3;
+						}else{
+							this.pageStatus.three = true;
+							this.rockHandle();
+						}
+						
 					},
                     sureSubmitPhone:function(){  //确认提交信息
                         var This = this;
@@ -392,7 +386,7 @@
                     lotteryHandle:function(){  //抽奖
 						var This = this;
                         //前端测试数据
-                        var res = {
+                        /*var res = {
                             status:0,
                             is_prize:1,
                             prize_info:[{
@@ -402,12 +396,11 @@
 							prize_num:1
                         }
                         setTimeout(function(){
-                            This.ballState = false;
                             if(res.status == 0){
                                 This.is_prize = res.is_prize;
                                 This.prize_info = res.prize_info;
                                 This.prize_num = res.prize_num;
-								if(This.prize_num > 0){   //有抽奖次数，并且没抽奖，可再次抽奖
+								if(This.prize_num > 0 && This.is_prize == 0){   //有抽奖次数，并且没抽奖，可再次抽奖
 									This.lotteryState = true;
 								}
                                 if(This.is_prize == 1){   //已中奖
@@ -420,7 +413,7 @@
                                 }
                             }                           
                         },1000)
-                        return;
+                        return;*/
                         $.ajax({
                             url: This.linkHref.lottery,
                             dataType: 'json',
@@ -454,10 +447,10 @@
                         var This = this;
                         This.loading.status = true;
 						//前段测试数据
-						var res = {
+						/*var res = {
                             status:0,
-							is_sign:1,
-							is_drawing:0,
+							is_sign:0,
+							is_drawing:1,
 							prize_info:[
 								{
 									name:"微信红包",
@@ -486,7 +479,7 @@
                             }
                         },1000)									
 						return;
-						
+						*/
                         $.ajax({
                             url: This.linkHref.getUserInfo,
                             dataType: 'json',
@@ -509,7 +502,6 @@
 										This.gift.num = res.prize_info[0].level; 
 										This.gift.txt = res.prize_info[0].name;
 									}
-                                    return true;
                                 }
                             },
                             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -555,21 +547,7 @@
                                 
                             }
 						})
-					},
-                    rockHandle2(){
-                        var This = this;
-                        if(This.prize_num != 0 && This.lotteryState){  //有抽奖次数
-                            This.lotteryState = false;
-                            This.ballState = true;
-                            var music_id = document.getElementById('music_id');
-                            music_id.play();
-                            console.log(123)
-                            $('#chaiBox').addClass('ball');
-                            This.lotteryHandle();   //抽奖接口
-
-                            
-                        }
-                    }
+					}
                 },
                 mounted: function () {
                     // this.init();

@@ -332,6 +332,10 @@ img{
                         font-size: REM(20);
                         height: REM(50);
                         line-height: REM(50);
+                        &.gray{
+                            background: #f5f5f5;
+                            color: #acacac;
+                        }
                    }
                }
             }
@@ -588,53 +592,65 @@ img{
     line-height: 2rem;
 }
 
-/*圆圈变大效果*/
+
 @keyframes wran {
     0% {
         transform: scale(0);
-        opacity: 0.1;
+        opacity: 0.1
     }
+
     5% {
         transform: scale(0.1);
-        opacity: 0.1;
+        opacity: 0.1
     }
+
     50% {
         transform: scale(0.5);
-        opacity: 0.3;
+        opacity: 0.3
     }
+
     75% {
         transform: scale(1);
-        opacity: 0.5;
+        opacity: 0.5
     }
+
     100% {
         transform: scale(2);
-        opacity: 0;
+        opacity: 0
     }
 }
-@-webkit-keyframes wran{
+
+@-webkit-keyframes wran {
     0% {
         -webkit-transform: scale(0);
-        opacity: 0.1;
+        opacity: 0.1
     }
+
     5% {
         -webkit-transform: scale(0.1);
-        opacity: 0.1;
+        opacity: 0.1
     }
+
     50% {
         -webkit-transform: scale(0.5);
-        opacity: 0.3;
+        opacity: 0.3
     }
+
     75% {
         -webkit-transform: scale(1);
-        opacity: 0.5;
+        opacity: 0.5
     }
+
     100% {
         -webkit-transform: scale(2);
-        opacity: 0;
+        opacity: 0
     }
 }
-.wran{
-    @include prefixer(animation,wran 2s linear infinite);
+
+.wran {
+    -webkit-animation: wran 2s linear infinite;
+    -moz-animation: wran 2s linear infinite;
+    animation: wran 2s linear infinite
 }
 
 .arrow {
@@ -642,7 +658,7 @@ img{
     width: 8px;
     height: 8px;
     position: absolute;
-    bottom: REM(150);
+    bottom: 5.33333rem;
     left: 50%;
     margin-left: -4px;
     border: 3px solid transparent;
@@ -650,55 +666,62 @@ img{
     border-left: 3px solid #fff;
     z-index: 99;
     opacity: .8;
-    @include prefixer(transform,rotate(-45deg));
-    @include prefixer(animation,arrow 1.5s infinite ease-in-out);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-animation: arrow 1.5s infinite ease-in-out;
+    -moz-animation: arrow 1.5s infinite ease-in-out;
+    animation: arrow 1.5s infinite ease-in-out
 }
 
 @-webkit-keyframes arrow {
     0% {
-        opacity:0;
-        -webkit-transform:translate(0, 0px) rotate(-45deg);
+        opacity: 0;
+        -webkit-transform: translate(0, 0px) rotate(-45deg)
     }
+
     50% {
-        opacity:1;
-        -webkit-transform:translate(0, 5px) rotate(-45deg) ;
+        opacity: 1;
+        -webkit-transform: translate(0, 5px) rotate(-45deg)
     }
+
     100% {
-        opacity:0;
-        -webkit-transform:translate(0, 10px) rotate(-45deg);
+        opacity: 0;
+        -webkit-transform: translate(0, 10px) rotate(-45deg)
     }
 }
-/*类似心跳*/
+
 @keyframes pulse {
-       0% {
-             -webkit-transform: scale3d( 1,1 ,1) ;
-             -ms-transform: scale3d( 1,1 ,1) ;
-             transform: scale3d( 1,1 ,1)
-       }
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        -ms-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
 
-       50% {
-             -webkit-transform: scale3d( 1.08,1.08 ,1.08) ;
-             -ms-transform: scale3d( 1.08,1.08 ,1.08) ;
-             transform: scale3d( 1.08,1.08 ,1.08)
-       }
+    50% {
+        -webkit-transform: scale3d(1.08, 1.08, 1.08);
+        -ms-transform: scale3d(1.08, 1.08, 1.08);
+        transform: scale3d(1.08, 1.08, 1.08)
+    }
 
-       100% {
-
-             -webkit-transform: scale3d( 1,1 ,1) ;
-             -ms-transform: scale3d( 1,1 ,1) ;
-             transform: scale3d( 1,1 ,1)
-       }
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        -ms-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
 }
 
 .pulse {
-       @include prefixer(animation,pulse 1s ease-in infinite);
+    -webkit-animation: pulse 1s ease-in infinite;
+    -moz-animation: pulse 1s ease-in infinite;
+    animation: pulse 1s ease-in infinite
 }
 
 @-webkit-keyframes zoomIn {
     0% {
         opacity: 0;
-        -webkit-transform: scale3d(.3,.3,.3);
-        transform: scale3d(.3,.3,.3)
+        -webkit-transform: scale3d(0.3, 0.3, 0.3);
+        transform: scale3d(0.3, 0.3, 0.3)
     }
 
     50% {
@@ -709,8 +732,8 @@ img{
 @keyframes zoomIn {
     0% {
         opacity: 0;
-        -webkit-transform: scale3d(.3,.3,.3);
-        transform: scale3d(.3,.3,.3)
+        -webkit-transform: scale3d(0.3, 0.3, 0.3);
+        transform: scale3d(0.3, 0.3, 0.3)
     }
 
     50% {
@@ -719,15 +742,16 @@ img{
 }
 
 .zoomIn {
-    @include prefixer(animation,zoomIn 0.5s ease-in both);
+    -webkit-animation: zoomIn 0.5s ease-in both;
+    -moz-animation: zoomIn 0.5s ease-in both;
+    animation: zoomIn 0.5s ease-in both
 }
-
 
 @-webkit-keyframes fadeInDown {
     0% {
         opacity: 0;
-        -webkit-transform: translate3d(0,-100%,0);
-        transform: translate3d(0,-100%,0)
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
     }
 
     100% {
@@ -740,8 +764,8 @@ img{
 @keyframes fadeInDown {
     0% {
         opacity: 0;
-        -webkit-transform: translate3d(0,-100%,0);
-        transform: translate3d(0,-100%,0)
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
     }
 
     100% {
@@ -752,43 +776,133 @@ img{
 }
 
 .fadeInDown {
-    @include prefixer(animation,fadeInDown 1s ease-in both);
+    -webkit-animation: fadeInDown 1s ease-in both;
+    -moz-animation: fadeInDown 1s ease-in both;
+    animation: fadeInDown 1s ease-in both
 }
 
-/*闪光闪动*/
 .flash {
-       @include prefixer(animation,flash 2s ease-in infinite);
+    -webkit-animation: flash 2s ease-in infinite;
+    -moz-animation: flash 2s ease-in infinite;
+    animation: flash 2s ease-in infinite
 }
-@-webkit-keyframes flash {
-       0%, 100%, 50% {
-             opacity: 1
-       }
 
-       25%, 75% {
-             opacity: 0
-       }
+@-webkit-keyframes flash {
+    0%, 100%, 50% {
+        opacity: 1
+    }
+
+    25%, 75% {
+        opacity: 0
+    }
 }
 
 @keyframes flash {
-       0%, 100%, 50% {
-             opacity: 1
-       }
+    0%, 100%, 50% {
+        opacity: 1
+    }
 
-       25%, 75% {
-             opacity: 0
-       }
+    25%, 75% {
+        opacity: 0
+    }
 }
 
-.shake{
-    @include prefixer(animation,shake_box 0.5s ease-in infinite);
+.shake {
+    -webkit-animation: shake_box 0.5s ease-in infinite;
+    -moz-animation: shake_box 0.5s ease-in infinite;
+    animation: shake_box 0.5s ease-in infinite
 }
-@keyframes shake_box{
-    0% {transform: rotate(0deg)}
-    50% {transform: rotate(-2deg)}
-    100% {transform: rotate(0deg)}
+
+@keyframes shake_box {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    50% {
+        transform: rotate(-2deg)
+    }
+
+    100% {
+        transform: rotate(0deg)
+    }
 }
-@-ms-keyframes shake_box{
-    0% {transform: rotate(0deg)}
-    50% {transform: rotate(-2deg)}
-    100% {transform: rotate(0deg)}
+
+@-ms-keyframes shake_box {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    50% {
+        transform: rotate(-2deg)
+    }
+
+    100% {
+        transform: rotate(0deg)
+    }
+}
+
+.ball {
+    -webkit-animation: wobble 1s linear infinite;
+    -moz-animation: wobble 1s linear infinite;
+    animation: wobble 1s linear infinite
+}
+
+@-webkit-keyframes wobble {
+    0% {
+        transform: none
+    }
+
+    15% {
+        -webkit-transform: translate3d(-25%, 0, 0) rotate(-5deg)
+    }
+
+    30% {
+        -webkit-transform: translate3d(20%, 0, 0) rotate(3deg)
+    }
+
+    45% {
+        -webkit-transform: translate3d(-15%, 0, 0) rotate(-3deg)
+    }
+
+    60% {
+        -webkit-transform: translate3d(10%, 0, 0) rotate(2deg)
+    }
+
+    75% {
+        -webkit-transform: translate3d(-5%, 0, 0) rotate(-1deg)
+    }
+
+    to {
+        transform: none
+    }
+}
+
+@keyframes wobble {
+    0% {
+        transform: none
+    }
+
+    15% {
+        transform: translate3d(-25%, 0, 0) rotate(-5deg)
+    }
+
+    30% {
+        transform: translate3d(20%, 0, 0) rotate(3deg)
+    }
+
+    45% {
+        transform: translate3d(-15%, 0, 0) rotate(-3deg)
+    }
+
+    60% {
+        transform: translate3d(10%, 0, 0) rotate(2deg)
+    }
+
+    75% {
+        transform: translate3d(-5%, 0, 0) rotate(-1deg)
+    }
+
+    to {
+        transform: none
+    }
 }

@@ -54,7 +54,7 @@
                     <p class="inputBox" v-show="gift.num != 3"><input type="text" name="" id="" v-model="gift.phone" placeholder="手机号"></p>
                     <p class="inputBox">
                         <input type="text" placeholder="验证码">
-                        <span>验证码</span>
+                        <span class="gray">获取验证码</span>
                     </p>
                 </div>
                 <div class="modelFooter">
@@ -225,9 +225,9 @@
                         // redpack:false,   
                         result:false,    //奖品结果
                         phone:false,    //填写手机号码
-                        gift:false,     //领奖
+                        gift:true,     //领奖
                         sorry:false,    //提示
-                        yz:true
+                        yz:false
                     },                    
                     lotteryState:true,    //抽奖状态
                     open:false,           //是否在开红包

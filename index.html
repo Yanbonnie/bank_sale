@@ -105,7 +105,8 @@
         </div>
         <!-- 身份验证框 -->
         <div class="model giftModel" v-show="model.yz">
-            <div class="modelBox">				
+            <div class="modelBox">	
+                <i class="close" @click="model.yz = false"><img src="images/close.png" alt=""></i>			
                 <div class="modelHeader"></div>
                 <div class="modelBody">
                     <img src="images/yz.png" class="yz" alt="">
@@ -227,7 +228,7 @@
                         phone:false,    //填写手机号码
                         gift:true,     //领奖
                         sorry:false,    //提示
-                        yz:false
+                        yz:true
                     },                    
                     lotteryState:true,    //抽奖状态
                     open:false,           //是否在开红包
